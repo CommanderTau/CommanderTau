@@ -1,0 +1,25 @@
+<textarea id="tarr" rows=25 cols=50></textarea>
+<script>
+function xor (x,y) { return (x||y)&&(!x||!y) }
+function impl(x,y) { return !x || y; }
+function predicate_compl(x,y,z) {
+return !impl(x,y)&&impl(z,z)
+|| !(x||y)&&impl(z,z);
+}
+function predicate_easy(x,y,z) {
+return !y;
+}
+
+
+
+var text = '';
+for (var x of [false, true])
+for (var y of [false, true])
+for (var z of [false, true])
+text += x*1+' '+y*1+' '+z*1+'\t| '
++ predicate_easy(x,y,z)*1+'\n';
+tarr.value = 'Таблица истинности:\n\n' + text;
+
+
+
+</script>
