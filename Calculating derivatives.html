@@ -1,0 +1,28 @@
+<h1> Расчёт производной </h1>
+x = <input id=anumber type=number value=0>
+&ndash; <input id=bnumber type=number value=10> :
+<input id=Nnumber type=number value=100 min=1> <br>
+f(x) = <input id=finput value="sin(x)">
+<button autofocus onclick="TODO()"> Расчёт </button> <br>
+
+Значения: <br>
+<textarea id=area cols=50 rows=20></textarea>
+
+<object id="SVG"></object>
+<script>
+
+function TODO () {
+A = +anumber.value;
+B = +bnumber.value;
+N = +Nnumber.value;
+dx = (B-A)/N;
+fx = finput.value
+.replace(/(\bsin\b)/g,"Math.$1")
+.replace(/(\bcos\b)/g,"Math.$1");
+text = "x\tf(x)\n";
+for (x = A; x <= B; x = x+dx)
+text += x+"\t"+eval( fx )+"\n";
+area.value = text.replaceAll(".",",");
+}
+
+</script>
