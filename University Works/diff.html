@@ -1,0 +1,35 @@
+<canvas id=canvas width='500px' height='500px' style="border:1px solid red;  "> 
+</canvas>
+
+<script>
+//y'=6x^2+5xy    от 1 до 2
+const startY=1;
+const startX=-5;
+const delX=0.1;
+let array = [];
+let finalX=5;
+let maxy=startY;
+let minY=Infinity;
+for (let X=startX, Y=startY, delY=1; X<=finalX+delX/2; X+=delX, Y+=delY){
+ let primeY=-X*X; 
+  if  (minY>Y) minY=Y;
+  if  (maxy<Y) maxy=Y;
+ delY=primeY*delX; 
+ array[X]=Y;
+}
+
+let w=canvas.width;
+let h=canvas.height;
+let kx=w/(finalX-startX);
+let ky=h/(maxy-minY);
+let ctx = canvas.getContext('2d');
+for (let X=startX ; X<=finalX+delX/2; X+=delX){
+ Y=array[X];
+ console.log(X,Y);
+ ctx.lineTo(kx*(X-startX), -(Y-minY)*ky+h);
+}
+ctx.stroke();
+alert(minY);
+</script>
+
+
