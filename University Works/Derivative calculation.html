@@ -1,28 +1,96 @@
 <h1> Расчёт производной </h1>
-x = <input id=anumber type=number value=0>
-&ndash; <input id=bnumber type=number value=10> :
-<input id=Nnumber type=number value=100 min=1> <br>
-f(x) = <input id=finput value="sin(x)">
+     x = <input id=anumber type=number value=0>
+ &ndash; <input id=bnumber type=number value=10> :
+         <input id=Nnumber type=number value=100 min=1> <br>
+f(x) = <input id=finput value="sin(x)/cos(x)">
 <button autofocus onclick="TODO()"> Расчёт </button> <br>
-
 Значения: <br>
-<textarea id=area cols=50 rows=20></textarea>
-
-<object id="SVG"></object>
+<textarea id=area cols=50 rows=5 spellcheck=false></textarea>
+<object id="SVG"> здесь будет Ваш график! =) </object>
 <script>
 
-function TODO () {
-A = +anumber.value;
-B = +bnumber.value;
-N = +Nnumber.value;
-dx = (B-A)/N;
-fx = finput.value
-.replace(/(\bsin\b)/g,"Math.$1")
-.replace(/(\bcos\b)/g,"Math.$1");
-text = "x\tf(x)\n";
-for (x = A; x <= B; x = x+dx)
-text += x+"\t"+eval( fx )+"\n";
-area.value = text.replaceAll(".",",");
-}
+aa=22,
+bb=33;
+ss=0
+for (let i=0; i<100; i++) ss += Math.random();
+ss/=100;
+ss=Math.round(ss)+aa*bb-0,5;
+alert(~~ss);
 
+
+function getMinMax (A) {
+ max = -Infinity;
+ min = +Infinity;
+ for (i = 0; i < A.length; i++) if (A[i] > max) max = A[i];
+ for (i = 0; i < A.length; i++) if (A[i] < min) min = A[i];
+ return [ min, max ];
+}
+function SVG_open (width, height) {
+ let txt = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>';
+ txt += '<svg version = "1.1" xmlns ='
+     +' "http://www.w3.org/2000/svg"'
+     +' height="'+ height +'px" '
+     +' width="' + width +'px">';
+ txt += '<rect x="0" y="0" width="100%" height="100%" fill="none" stroke="grey" />';
+ return txt;
+}
+function SVG_close (svg) {
+ return svg += '</svg>';
+}
+function DRAW (xs,ys,minX,maxY,scaleX,scaleY,color) {
+ let txt = '';
+ txt += '<path fill="none" stroke="' + color
+     +  '" d="M '+xs[0]+' '+ys[0];
+ for (i = 0; i < xs.length; i++)
+  txt += ' L '+scaleX*(xs[i]-minX)
+          +' '+scaleY*(maxY-ys[i]);
+ txt += '" />';
+ return txt;
+}
+function press () {
+ text = "x\tf(x)\tf'(x)\n";
+ for (x = A; x <= B; x = x+dx)
+  text += x+"\t"+eval( fx )+"\n";
+ return text.replaceAll(".",",");
+}
+function TODO () {
+ const OX = 600;
+ const OY = 400;
+ A = +anumber.value;
+ B = +bnumber.value;
+ N = +Nnumber.value;
+ dx = (B-A)/N;
+ fx = finput.value
+ .replace(/(\bsin\b)/g,"Math.$1")
+ .replace(/(\bcos\b)/g,"Math.$1")
+ .replace(/(\btan\b)/g,"Math.$1")
+ .replace(/(\bsqrt\b)/g,"Math.$1");
+ text = "x\tf(x)\tf'(x)\n";
+ for (x = A; x <= B; x = x+dx)
+  text += x+"\t"+eval( fx )+"\n";
+ area.value = text.replaceAll(".",",");
+
+ xs = []; for (x = A; x <= B; x += dx) xs.push(x);
+ ys = []; for (x = A; x <= B; x += dx) ys.push(eval( fx ));
+
+ xp = []; for (i = 0; i+1 < xs.length; i++) xp.push(xs[i]);
+ yp = [];
+ for (i = 0; i+1 < ys.length; i++)
+  yp.push ( (ys[i+1]-ys[i])
+          / (xs[i+1]-xs[i]));
+ area.value = press (x,fx);
+ [ minX, maxX ] = getMinMax (xs);
+ [ minY, maxY ] = getMinMax (ys);
+
+ scaleX = OX/(maxX - minX);
+ scaleY = OY/(maxY - minY);
+
+ let src = SVG_open(OX,OY);
+
+ src += DRAW (xs,ys,minX,maxY,scaleX,scaleY,"red");
+ src += DRAW (xp,yp,minX,maxY,scaleX,scaleY,"blue");
+
+ src = SVG_close(src);
+ SVG.innerHTML = src;
+}
 </script>
