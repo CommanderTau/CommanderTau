@@ -1,0 +1,55 @@
+﻿<canvas id="plain"  style="border:1px solid grey;"
+        width=500px height=500px></canvas>
+<script>
+
+ function сумма (A,B){ return {Re: A.Re+B.Re,Im: A.Im+B.Im}}
+ function разнь (A,B){ return {Re: A.Re-B.Re,Im: A.Im-B.Im}}
+ function сопрж (A)  { return {Re: A.Re,Im:-A.Im }}
+ function скляр (A,a){ return {Re: A.Re*a, Im:A.Im*a }}
+ function умнож (A,B){ return {Re: A.Re*B.Re-A.Im*B.Im, Im:A.Im*B.Re+A.Re*B.Im}}
+ function норма (A)  { return Math.sqrt(умнож(A,сопрж(A)).Re )}
+ function delen (A,B){
+  let числ = умнож (c1,сопрж(c2));
+  let знам = умнож (c2,сопрж(c2)).Re;
+  return скляр (числ, 1/знам);
+ }
+ function вывод (c) {
+  let sign = (c.Im < 0?'-':'+');
+  let B = Math.abs(c.Im);
+  return c.Re+sign+'i'+(B!=1?B:'');
+ }
+ 
+ let W = plain.width,
+     H = plain.height;
+ let ctx = plain.getContext('2d');
+
+ let c1 = { Re:-1, Im: +1 };
+ let c2 = { Re:+1, Im: +2 };
+ let c3 = { Re:+4, Im: -3 };
+ // alert(�����(c3));
+ // alert( ����� ( ����� (c1,c2) ));
+
+ ctx.moveTo (0, H/2);
+ ctx.lineTo (W, H/2);
+ ctx.moveTo (W/2, 0);
+ ctx.lineTo (W/2, H);
+ ctx.stroke();
+
+function chertit (C, color) {
+ let masstab = 50;
+ ctx.beginPath();
+ ctx.strokeStyle = color;
+ ctx.moveTo (W/2, H/2);
+ let px = W/2 + C.Re*masstab,
+     py = H/2 - C.Im*masstab;
+ ctx.lineTo (px, py);
+ ctx.arc    (px, py, 5, 0, 360);
+ ctx.stroke()
+}
+
+ chertit (c1, "red");
+ chertit (c2, "blue");
+ chertit (delen (c1,c2), "green");
+ ctx.stroke();
+
+</script>
