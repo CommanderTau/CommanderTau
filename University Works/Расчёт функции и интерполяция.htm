@@ -1,0 +1,71 @@
+<input id=inp1 value="3*$x**2-Math.sin(10*$x)"> (Ваша функция) <br>
+<input id=inp2 value="-1"> (левая граница) <br>
+<input id=inp3 value="1"> (правая граница) <br>
+<input id=inp4 value="11"> (число узлов) <br>
+<button onclick=exec()> Расчёт </button>
+<button onclick=inter(100,10)> Интерполяция </button>
+<button onclick=draw()> Рисуй </button> <br>
+<textarea id=txt cols=30 rows=10></textarea> <br>
+<canvas id=cnv width=400 height=150></canvas>
+<script>
+function exec () {
+Xs = [], Ys = [], txt.value = ""
+let dx = (inp3.value-inp2.value)/(inp4.value-1)
+for (i=0;i<inp4.value;i++) {
+let x = +inp2.value+i*dx
+let y = eval(inp1.value.replaceAll("$x","("+x+")"))
+Xs.push(x), Ys.push(y)
+txt.value += x+"\t"+y+"\n"
+}
+txt.value = txt.value.replaceAll(".",",")
+}
+function Lagrange (x,xa,xb,ya,yb) {
+let y = ya*(x-xb)/(xa-xb)
+       + yb*(x-xa)/(xb-xa);
+return y;
+}
+function lagrange (x,X,Y) {
+n = X.length;
+let y = 0;
+for (let i = 0; i < n; i++) {
+  let числ = 1;
+  let знам = 1;
+  for (let j = 0; j < n; j++) if (j != i) числ *= x   -X[j];
+  for (let j = 0; j < n; j++) if (j != i) знам *= X[i]-X[j];
+  y += Y[i]* числ / знам;
+}
+return y;
+}
+function inter (T,t) {
+k = 4
+Xs2 = [], Ys2 = []
+for (ai=0; ai < Xs.length; ai++) {
+  let dx = (Xs[ai+1]-Xs[ai])/t
+  for (j=0; j < t; j++) {
+   xj = Xs[ai]+ j*dx;
+   yj = lagrange (xj, Xs.slice(ai,ai+k), Ys.slice(ai,ai+k))
+   Xs2.push (xj);
+   Ys2.push (yj);
+  }
+}
+Xs2.push (Xs[Xs.length-1]);
+Ys2.push (Ys[Ys.length-1]);
+Xs = Xs2, Ys = Ys2
+}
+
+
+function draw () {
+cnv.width+=0;
+let a = Xs[0], b = Xs[Xs.length-1]
+let A = Math.min(...Ys);
+let B = Math.max(...Ys);
+xs = [], ys = [];
+for (i=0; i < Xs.length; i++)
+xs.push(cnv.width*(Xs[i]-a)/(b-a)),
+ys.push(cnv.height-cnv.height*(Ys[i]-A)/(B-A));
+ctx = cnv.getContext('2d')
+ctx.moveTo(xs[0],ys[0])
+for (i=0; i < Xs.length; i++) ctx.lineTo(xs[i],ys[i]);
+ctx.stroke()
+}
+</script>

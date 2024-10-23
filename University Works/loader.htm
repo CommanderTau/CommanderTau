@@ -1,0 +1,40 @@
+<input type=file accept=.txt multiple autofocus
+ onchange=FR.readAsText(this.files[0])>
+<button onclick=scale()> Построить сетку </button>
+<input type=number min=1 max=500 value=30> (ширина окна)
+<button onclick=scale2()> Равномерная сетка </button><br>
+<textarea id=ritm cols=20 rows=20></textarea>
+<textarea id=time cols=20 rows=20>0</textarea>
+<textarea id=regl cols=20 rows=20>0</textarea>
+<script>
+ FR = new FileReader();
+ FR.onload =()=> ritm.value = FR.result;
+ 
+ function scale() {
+  let text = ritm.value;
+  Ritm = text.split('\n');
+  Ritm.pop();
+  Ritm = Ritm.map(v=>Number(v));
+  Time = [0]
+  for (i=0; i < Ritm.length; i++)
+   Time[i+1] = Time[i]+Ritm[i];
+  Time.pop();
+  str = '';
+  for (i=0; i < Ritm.length; i++)
+   str += Time[i] + '\t' + Ritm[i] + '\n';
+  time.value = str;
+ }
+ 
+  function scale2() {
+  Second = [0]
+  RegulSet = [0]
+   for (i=0; i < Ritm.length; i++)
+    Second[i] = i;
+   for (i=0; i < Ritm.length; i++) 
+    RegulSet[i]=(Ritm[i]+Ritm[i+1]+Ritm[i+2]+Ritm[i+3]+Ritm[i+4])/5
+   sec = '';;	
+   for (i=0; i < Ritm.length; i++)
+    sec += Second[i] + '\t' + RegulSet[i] + '\n';
+   regl.value = sec;
+  }
+</script>

@@ -1,0 +1,38 @@
+﻿<h1> Текст для зашифровки </h1>
+<textarea id=tar0 rows=20 cols=50 spellcheck=false wrap=off></textarea>
+<button onclick="шифрование();">  Шифровать   </button>
+<h1> Текст шифровки </h1>
+<textarea id=tarr rows=20 cols=50 spellcheck=false></textarea>
+<button onclick="расшифровка();"> Расшифровка </button>
+<h1> Текст зашифрованный </h1>
+<textarea id=tar2 rows=20 cols=50 spellcheck=false wrap=off></textarea>
+<script>
+ let seed;
+function rand () { seed = (seed * 1103515245n + 12345n) & 2147483647n; return seed >> 16n; }
+function rand5bits () { return Number(rand() >> 10n); }
+function шифрование () {
+ seed = BigInt(Number(prompt("Шифр = ")));
+ rand();
+ let message = tar0.value;
+ let shifr = "";
+ for (let i=0; i < message.length; i++) {
+  let mask = rand5bits();
+  shifr += String.fromCharCode(
+     (message.charCodeAt(i) ^ mask)
+    );
+ }
+ tarr.value = shifr;
+}
+function расшифровка () {
+ seed = BigInt(Number(prompt("Шифр = ")));
+ rand();
+ let coded = tarr.value;
+ let uncoded = "";
+ for (let i = 0; i < coded.length; i++) {
+  let mask = rand5bits();
+  uncoded += String.fromCharCode(
+   (coded.charCodeAt(i)) ^ mask );
+ }
+ tar2.value = uncoded;
+}
+</script>

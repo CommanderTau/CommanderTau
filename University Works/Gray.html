@@ -1,0 +1,23 @@
+<script>
+ function gray (n) {
+  let B = Array (n);
+  for (let i=0; i < n; i++) B[i]=0;
+  alert(B);
+  for (let i=1; i<2**n; i++) {
+   p=Q(i);
+   B[p]=1-B[p];
+   alert(B);
+  }
+ }
+ function Q(i) {
+  let q = 1, j=i;
+  while (j%2==0) {
+   j>>=1;
+   q++;
+  }
+  return q-1;
+ }
+ 
+ gray(3);
+ 
+</script>

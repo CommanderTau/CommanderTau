@@ -1,0 +1,16 @@
+<input type="file" onchange="readFile(this)"> <br>
+<textarea id=text rows=50 cols=50></textarea>
+
+<script>
+function readFile(input) {
+  let file   = input.files[0];
+  let reader = new FileReader();
+  reader.readAsText(file);
+  reader.onload = function() {
+    text.value=reader.result;
+  };
+  reader.onerror = function() {
+    console.log(reader.error);
+  };
+}
+</script>

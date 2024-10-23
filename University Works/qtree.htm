@@ -1,0 +1,39 @@
+<img id=img onload="
+ W = canvas.width=img.width;
+ H = canvas.height=img.height;
+ ctx.drawImage(this,0,0);
+ qtree(0,0,W,tree);
+" hidden>
+<canvas id=canvas></canvas>
+<script>
+ FR = new FileReader();
+ FR.onload = v => img.src = FR.result;
+ ctx = canvas.getContext('2d');
+</script>
+<input type=file onchange="FR.readAsDataURL(this.files[0])" autofocus>
+
+<script>
+ tree = {};
+ function qtree(X,Y,W,tree) {
+  tree.final = true;
+  pix = ctx.getImageData(X,Y,W,W), dat = pix.data;
+  R = dat[0], G = dat[1], B = dat[2];
+  for (let p = 0; (p < 4*W*W) & tree.final; p+=4) {
+   r = dat[p], g = dat[p+1], b = dat[p+2];
+   if ((r!=R)|(g!=G)|(b!=B)) tree.final = false;
+  }
+  if (tree.final) {
+   tree.color = "#"+[R,G,B].map
+   (n => Number(n).toString(16).padStart(2,'0').toUpperCase()
+   ).join("");
+   console.log(tree.color);
+  } else if (W >= 2) {
+   let w = W/2;
+   tree.q1 = {}; qtree(X,  Y,  w, tree.q1);
+   tree.q2 = {}; qtree(X+w,Y,  w, tree.q2);
+   tree.q3 = {}; qtree(X,  Y+w,w, tree.q3);
+   tree.q4 = {}; qtree(X+w,Y+w,w, tree.q4);
+   console.log(w);
+  }
+ }
+</script>

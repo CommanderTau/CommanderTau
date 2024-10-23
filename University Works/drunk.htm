@@ -1,0 +1,22 @@
+<canvas id=holst width=400 height=400 style="border: 1px solid red"></canvas>
+<script>
+ x=200, y=200; R=10
+ ctx = holst.getContext('2d')
+ pix = ctx.getImageData(0,0,400,400)
+ dat = pix.data;
+ for (i=0; i<R*R; i++){
+ ind = (y*400+x)*4
+ dat[ind+0] = i%256;
+ dat[ind+1] = i%256
+ dat[ind+2] = i%256;
+ dat[ind+3] = 255;
+  if (Math.round(Math.random()) == 0)
+  x += Math.round(Math.random())*2-1
+ else
+  y += Math.round(Math.random())*2-1
+}
+ ctx.putImageData(pix,0,0)
+ ctx.moveTo(200+R,200)
+ ctx.arc(200,200,R,0,2*Math.PI,true);
+ ctx.stroke()
+</script>

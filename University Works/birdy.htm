@@ -1,0 +1,118 @@
+<title> &#9992; Хлопо-птах </title>
+<center>
+<canvas id=canvas width=600px height=600px
+ style="border:inset 4px lightgrey;"></canvas>
+<canvas id=masks width=600px height=600px
+ style="border:inset 4px lightgrey;" hidden></canvas>
+<img id=img src=birdy1.png hidden>
+<script>
+ document.body.onkeydown = v => {
+  switch (v.key) {
+   case 'ArrowUp': down(); break;
+   case 'Enter': {
+    if  (E.A) {clearInterval (E.A); E.A = 0;
+               ctx.fillText('Пауза...',250,300,1000)}
+    else E.A = setInterval (frame, E.D);
+    break;
+   }
+  }
+ }
+ let E = {
+  A: 0,                        // таймер для кадров
+  x: 100,                    // х птички
+  y: 100,                    // у птички
+  S: 20,                    // шаг птички
+  B: 20,                    // толщина птички
+  D: 1000/10,                // 1000/FPS
+  W: canvas.width,            // ширина холста
+  H: canvas.height,            // высота холста
+  F: 0,                        // номер кадра
+  tubes: Array(100).fill(1).map(v => Math.floor(Math.random()*8)),            // трубы
+  h: 100,                    // h трубы
+  d: 50,                    // щель между трубами
+  w: 50,                    // w трубы
+  Z: 200,                    // зазор в трубе
+  I: -1,					// х столкновения
+  J: -1,					// у столкновения
+  V: 0,						// скорость падения
+  G: 1/100,					// ускорение падения
+ }
+ var ctx = canvas.getContext("2d");
+ var CTX = masks.getContext("2d");
+ var my_gradient = ctx.createLinearGradient(0,0,0,E.H*2/3);
+ my_gradient.addColorStop(0, "blue");
+ my_gradient.addColorStop(1, "cyan");
+ ctx.font = '60px sans-serif'
+ ctx.fillText('Жми [ввод] и играй!',20,300,1000)
+ function отрисовка_фона () {
+  canvas.width += 0;                    // очистить холст
+  masks.width  += 0;                    // очистить маски
+  ctx.fillStyle = my_gradient;            // заливка "небо"
+  ctx.fillRect(0,0,E.W,E.H)                // заливаем небо
+  ctx.drawImage(img,0,E.H/2, E.W, E.H/2);    // рисуем "задник"
+ }
+ function отрисовка_птички (ctx, color) {
+  ctx.fillStyle = color;        // рисуем
+  ctx.ellipse(E.x,E.y,30,E.B,0,2*Math.PI,false) // птичку
+  ctx.fill();
+ }
+ function отрисовка_труб (ctx, bgcolor, fgcolor) {
+  let v = 3; // скорость движения труб
+  let S = v*E.F;
+  let I = S/(E.w+E.h);
+  for (let i=0; i < E.tubes.length; i++) {
+   let xt = i*(E.w+E.h) - E.F*v,  // разнести код/дизайн
+       Yt = E.d*E.tubes[i],
+       yt = E.H-Yt;
+   let truba = ctx.createLinearGradient(200+xt    ,0,
+                                        200+xt+E.w,0);
+   truba.addColorStop(0, bgcolor);
+   truba.addColorStop(1, fgcolor);
+   ctx.fillStyle = truba;
+   ctx.fillRect(200+xt, yt,E.w, Yt )
+   ctx.fillRect(200+xt, 0, E.w, yt-E.Z )
+   }
+  выводимНомерКадра ('black',0); // конец вывода кадра
+ }
+ function frame () {
+  E.F++;            // увеличиваем счётчик кадров
+  E.y+=E.V;
+  E.V+=E.G*E.D;
+  E.y=~~E.y;
+  отрисовка_фона ();
+  отрисовка_труб (ctx, "green", "yellow");
+  отрисовка_труб (CTX, "lime", "lime");
+  отрисовка_птички (ctx, "rgba(255,99,0,0.7)");
+  отрисовка_птички (CTX, "rgba(255,0,0,0.5)");
+  if (столкнулась ()) boom();
+ }
+ function выводимНомерКадра (color, dx) {
+  if (!color) color = 'white';
+  ctx.fillStyle = color;
+  ctx.font = '30px sans-serif'            // выводим
+  ctx.fillText('Кадр №'+E.F,dx,40,1000)    // номер кадра
+ }
+ function down() {
+  if (E.A) if (E.y-E.S >= E.B)     E.y-=E.S;
+  E.V = 0;
+ }
+ function boom() {
+  if (E.A) {
+   clearInterval (E.A); E.A = 0;
+   ctx.fillText('ПРОИГРАЛ!!! =)',200,300,1000)
+   ctx.drawImage(bom,E.J-30,E.I-30, 60, 60);    // рисуем "booms"
+  }
+ }
+ 
+ function столкнулась () {
+  let bytes = CTX.getImageData(0,0,E.W,E.H).data;
+  E.I = -1, E.J = -1;
+  for (let i = 0; i < bytes.length; i+=4)
+   if (bytes[i] == 128) {
+    E.I = ~~(i/(4*600));
+    E.J = ~~(i/4) % 600;
+	break;
+   }
+  return E.I != -1;
+ }
+</script>

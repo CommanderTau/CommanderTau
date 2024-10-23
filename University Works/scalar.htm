@@ -1,0 +1,44 @@
+<canvas id=canvas width=600 height=600
+ style="border:1px dashed red;"</canvas>
+<script>
+ a = {x:-1, y:0};
+ b = {x:1, y:1};
+ scalar = (a,b) => a.x*b.x+a.y*b.y;
+ length =  a    => Math.sqrt(scalar(a,a));
+ cosang = (a,b) => scalar(a,b)/length(a)/length(b);
+ karta =
+`00000000000000000000
+ 00100000000000000000
+ 00011111111110000000
+ 00010000000010000000
+ 00010010000010000000
+ 00011110000000000000
+ 00100000000000000000
+ 00000000000000000000
+ 00000000000000000000
+ 00000000000000000000
+ 00000000000000000000
+ 00000000000000000000
+ 00000000000000000000
+ 00000000000000000000
+ 00000000000000000000
+ 00000000000000000000
+ 00000000000000000000
+ 00000000000000000000
+ 00000000000000000000
+ 00000000000000000000`
+ .split('\n ').map(v=>v.split('').map(v=>+v));
+ const ms = 30,
+       kh = karta.length,
+       kw = karta[0].length;
+ ctx = canvas.getContext('2d');
+ ctx.strokeStyle = "red";
+ ctx.lineWidth   = 3;
+ for (let i = 0; i < kh; i++)
+  for (let j = 0; j < kw; j++) if (karta[i][j]) {
+   ctx.fillRect(ms*j,ms*i,ms,ms);
+   ctx.moveTo(ms*j,ms*i);
+   ctx.lineTo(ms*j+ms,ms*i);
+  }
+ ctx.stroke();
+</script>

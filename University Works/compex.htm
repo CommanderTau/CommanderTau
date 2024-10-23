@@ -1,0 +1,26 @@
+<script>
+function сумма (A,B){ return {Re: A.Re+B.Re,Im: A.Im+B.Im}}
+function разнь (A,B){ return {Re: A.Re-B.Re,Im: A.Im-B.Im}}
+function сопрж (A) { return {Re: A.Re,Im:-A.Im }}
+function скляр (A,a){ return {Re: A.Re*a, Im:A.Im*a }}
+function умнож (A,B){ return {Re: A.Re*B.Re-A.Im*B.Im, Im:A.Im*B.Re+A.Re*B.Im}}
+function делен (A,B){
+let числ = умнож (c1,сопрж(c2));
+let знам = умнож (c2,сопрж(c2)).Re;
+return скляр (числ, 1 / знам);
+}
+function норма (A) {return Math.sqrt( умнож(А, сопрж(А)).Re )}
+function вывод (c) {
+let sign = (c.Im < 0?'-':'+');
+let B = Math.abs(c.Im);
+return c.Re+sign+'i'+(B!=1?B:'');
+}
+let c1 = { Re:-1, Im: +1 };
+let c2 = { Re:+1, Im: +2 };
+let c3 = { Re:+3, Im: -3 };
+alert(
+вывод (
+делен (c1,c2)
+)
+);
+</script>

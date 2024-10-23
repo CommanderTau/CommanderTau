@@ -1,0 +1,17 @@
+Откройте консоль!
+
+<script>
+ azb = 4
+ AZB = 'ATGC'
+ seq = ''
+ for (i=0;i<1000000;i++)
+  seq += AZB[Math.floor(Math.random()*azb)]
+ let N = 4;
+ for (i=0;i<seq.length;i++) {
+  let P = true;
+  for (m=0,p=N-1;p>0;p--,m++)
+   P = P && (seq[i+m] == seq[i+p]);
+  if (P)
+     console.log(seq.slice(i,i+N));
+ }
+</script>

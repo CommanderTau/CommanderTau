@@ -1,0 +1,100 @@
+<body onkeyup="
+oldX = x;
+oldY = y;
+ switch (event.key ) {
+  case 'ArrowRight': ugol -= dugol; refresh(); break;
+  case 'ArrowLeft' : ugol += dugol; refresh(); break;
+  case 'ArrowUp'   : Ahead();    refresh(); break;
+  case 'ArrowDown' : Back();     refresh();
+ }
+"><canvas id=canvas width=500 height=500
+style="border:10px groove grey;"></canvas>
+<script>
+ const manr = 10, dugol = 15;
+ const pi = Math.PI, cos = Math.cos, sin = Math.sin;
+const colors=["#AAA","red","blue","green"];
+const map = 
+  `0000000000
+   1111111110
+   0010000010
+   0010000010
+   0011110010
+   0000000000
+   0000000000
+   0000020000
+   0000000000
+   0000000000`
+.split('\n').map(v=>v.trim().split('').map(v=>+v))
+ let ugol = 300;
+ let norm =20;
+let x = 0;
+let y = 0;
+ ctx = canvas.getContext('2d');
+ function refresh () {
+  canvas.width+=0;
+for (i=0 ; i<map.length ; i++){
+   for (j=0; j<map[i].length; j++){
+     let val=map[i][j];  //координата клетки
+       ctx.fillStyle = colors[val];
+       ctx.fillRect(j*50,i*50,50,50);     
+  }
+}
+  ctx.fillStyle = "black"
+  ctx.fillRect(x-manr,y-manr,2*manr,2*manr); // Квадрат 
+  ctx.moveTo(x,y); // Линия
+  ctx.lineTo(x+norm*cos(ugol/180*pi),y-norm*sin(ugol/180*pi)); // Движение линии
+  ctx.stroke();
+ }
+function Ahead() {
+Prev(1);
+Gran();
+stub();
+}
+function Back() {
+Prev(-1);
+Gran();
+stub();
+}
+function Prev(k) {
+y -= k*norm*sin(ugol/180*pi);
+x += k*norm*cos(ugol/180*pi);
+}
+function Gran() {
+x = x >=  manr/2  ? x < 500 ? x : 499 - manr : manr;
+y = y >=  manr/2  ? y < 500 ? y : 499 - manr : manr;
+}
+function stub(){
+ 
+let j = Math.floor(x/50);
+let i = Math.floor(y/50);
+if((map[i][j])>0){
+ //alert(27);
+ if(map[i][j]) {
+  x=oldX;
+  y=oldY;
+  }
+ }
+else {
+ let j = Math.floor((x+manr)/50);
+ let i = Math.floor((y+manr)/50);
+ if((map[i][j])>0){
+ if(map[i][j]) {
+  x=oldX;
+  y=oldY;
+  }
+ }
+ else{
+ let j = Math.floor((x-manr)/50);
+ let i = Math.floor((y-manr)/50);
+ if((map[i][j])>0){
+ if(map[i][j]) {
+  x=oldX;
+  y=oldY;
+  }
+ }
+ }
+ }
+}
+
+ refresh ()</script></body>
+ 

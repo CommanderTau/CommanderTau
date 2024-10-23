@@ -1,0 +1,29 @@
+<h1>FIREMAN</h1>
+<script>
+function f(x) {
+ return (a*a+z*z)**0.5+(b*b+(c-z)**2)**0.5;
+}
+Ax = 1*prompt("Сообщите x координату авиабазы");
+Ay = 1*prompt("Сообщите y координату авиабазы");
+Bx = 1*prompt("Сообщите x координату точки возгорания");
+By = 1*prompt("Сообщите y координату точки возгорания");
+ a = Ay;
+ b = By;
+ c = Bx-Ax;
+ N = 100;
+ dc = c/(N-1);
+  bestX = -100;
+  bestS = 1000000;
+   for (x = Ax; x <=Bx; x += dc) {
+   z = x-Ax
+   S=f(z);
+   console.log(x,S);
+	 if (S < bestS) {
+      bestS = S;
+      bestX = x;
+    }	  
+   }
+    alert(
+    "Наилучший x="+bestX+" км. при расстояние = "+bestS
+    );
+</script>

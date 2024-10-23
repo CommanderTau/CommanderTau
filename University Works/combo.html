@@ -1,0 +1,26 @@
+<script>
+
+ /////// Первый вид перебора
+ for (let i = 0; i < 2**4; i++)
+  alert(Number(i).toString(2).padStart(4, "0"));
+
+ /////// Второй вид перебора (рекурсия)
+ function перебор (prefix,ariadna,a,b) {
+  if (ariadna > 0)
+   for (let i = a; i < b; i++)
+    перебор ( prefix+i,ariadna-1,a,b);
+  else alert( prefix );
+ }
+
+ перебор ('',4, 0,2);
+
+
+ /////// Третий вид перебора (циклы)
+ reg = 4;
+ for (i = 0; i < 2; i++)
+  for (j = 0; j < 2; j++)
+   for (k = 0; k < 2; k++)
+    for (l = 0; l < 2; l++)
+     alert(''+i+j+k+l);
+
+</script>

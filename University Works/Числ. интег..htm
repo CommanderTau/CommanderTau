@@ -1,0 +1,67 @@
+Численное итегрирование <br>
+Функция:
+<input id=funk value="$x**3"><br>
+Интервал:<br>
+A = <input id=intA value="1"><br>
+B = <input id=intB value="2"><br>
+Количество узлов:<br>
+N = <input id=intN value="11"><br>
+<button onclick="
+tar.value=calc(+intA.value,+intB.value,+intN.value,funk.value)
+"> Click me </button><br>
+<textarea id=tar cols=50 rows=15></textarea>
+<br>
+<button onclick="
+micro = microslide( parse( tar.value));
+zoomer( micro, paint, 10, 10, paint.width-20,paint.height-20,'rgba(0,255,0,1)');
+zoomer( micro, paint, 15, 15, paint.width-20,paint.height-20,'rgba(255, 102,0,0.7)');
+">Draw me</button>
+<button onclick=paint.width+=0> Clear </button>
+<br>
+<script>
+function calc (A,B,N,F) {
+  let dx =(B-A)/(N-1), txt  = '';
+  for (i=0; i<N; i++)  txt += (A+i*dx) +'\t'+
+        eval(F.replaceAll('$x',A+i*dx))+'\n';
+  return txt.replaceAll('.',',')
+}
+function parse (txt) {
+  A = [], B = [];
+  txt = txt.replaceAll(',','.')
+  lines = txt.split('\n');
+  for (i=0; i<lines.length; i++) if (lines[i] != '')
+   A.push(+lines[i].split('\t')[0])
+  for (i=0; i<lines.length; i++) if (lines[i] != '')
+   B.push(+lines[i].split('\t')[1])
+  return [A,B]
+}
+function microslide (XY) {
+  let [Xs,Ys] = XY;
+  let N = Xs.length;
+  let A = Xs[0];
+  let B = Xs[N-1];
+  let M = Math.max(...Ys)
+  let m = Math.min(...Ys)
+  let K = 1/(M-m);
+  let del = 1/(N-1);
+  Px = [], Py = [];
+  for (i=0;i<N;i++) Px.push(i*del)
+  for (i=0;i<N;i++) Py.push(1-(Ys[i]-m)*K)
+  return [Px,Py]
+}
+function zoomer (XY, paint, dx, dy, kx, ky, color) {
+  color = color || 'black';
+  let [Xs,Ys] = XY;
+  let N = Xs.length;
+  ctx = paint.getContext('2d')
+  ctx.strokeStyle = color;
+  for (i=0; i < N-1; i++) {
+   ctx.moveTo(dx+kx*Xs[i  ], dy+ky*Ys[i  ])
+   ctx.lineTo(dx+kx*Xs[i+1], dy+ky*Ys[i+1])
+  }
+  ctx.stroke()
+  ctx.fillText('Hello world', 10, 50);
+}
+</script>
+<canvas width=400 height=300 id=paint style="border:1px red solid">
+</canvas>

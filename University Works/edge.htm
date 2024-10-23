@@ -1,0 +1,83 @@
+<video id=video controls></video>
+<canvas id=canvas></canvas>
+<button onclick="copy()"> Copy </button>
+<button onclick="stop()"> Stop </button>
+<input type=file onchange="FR.readAsDataURL(this.files[0])">
+<script>
+ let metka;
+ let FR = new FileReader ();
+ FR.onloadend = event => video.src = FR.result;
+ video.onloadeddata = event => {
+  video.muted = true;
+  video.defaultPlaybackRate = .25;
+  video.play();
+//  copy();
+ }
+ let gauss_2 = [
+  [2, 4, 5, 4,2],
+  [4, 9,12, 9,4],
+  [5,12,15,12,5],
+  [4, 9,12, 9,4],
+  [2, 4, 5, 4,2]
+ ];
+ let gauss_1 = [
+  [ 9, 12, 9],
+  [12, 15,12],
+  [ 9, 12, 9]
+ ];
+ let r = 1;
+ let znam_2 = 159;
+ let znam_1 =  99;
+function copy () {
+ canvas.width  = video.videoWidth;
+ canvas.height = video.videoHeight;
+ let ctx = canvas.getContext('2d');
+ ctx.drawImage(video,0,0);
+ let dat = ctx.getImageData(0,0,canvas.width,canvas.height);
+ let pix = dat.data;
+ let mat = new Uint8Array(canvas.width*canvas.height);
+ let MAT = new Uint8Array(canvas.width*canvas.height);
+ for (let y = 0; y < canvas.height; y++)
+  for (let x = 0; x < canvas.width; x++) {
+   let offset = 4*(x + canvas.width*y);
+   let mean = (pix[offset+0]+pix[offset+1]+pix[offset+2])/3;
+   mat[offset/4] = mean;
+  }
+  //***************
+ for (let y = r; y < canvas.height-r; y++)
+  for (let x = r; x < canvas.width-r; x++) {
+   let offs = x + canvas.width*y;
+   /*
+   let summ = 0;
+   for (let dy = -r; dy <= r; dy++)
+    for (let dx = -r; dx <= r; dx++)
+     summ += mat[offs+dx + dy*canvas.width] *gauss_1[dy+r][dx+r];
+   let mean = summ / znam_1;
+   */
+   MAT[offs] = Math.abs(mat[offs]-mat[offs-1])*8;
+   MAT[offs]+= Math.abs(mat[offs]-mat[offs-canvas.width])*8;
+   MAT[offs] = MAT[offs] > 200 ? 0 : 255;
+  }
+  //****************/
+ for (let y = 0; y < canvas.height; y++)
+  for (let x = 0; x < canvas.width; x++) {
+   let offset = 4*(x + canvas.width*y);
+   let mean = MAT[offset/4];
+   pix[offset+0] = pix[offset+1] = pix[offset+2] = mean;
+  }
+ ctx.putImageData(dat,0,0);
+ metka = setTimeout(copy,100);
+}
+
+function stop () {
+ clearInterval(metka);
+}
+</script>
+<html xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882"><head>
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_SharedWithUsers msdt:dt="string">2021 &#1041;&#1072;&#1082;&#1072;&#1083;&#1072;&#1074;&#1088;&#1080;&#1072;&#1090; 1 &#1082;&#1091;&#1088;&#1089; — &#1091;&#1095;&#1072;&#1089;&#1090;&#1085;&#1080;&#1082;&#1080;</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_SharedWithUsers>
+<mso:SharedWithUsers msdt:dt="string">135;#2021 &#1041;&#1072;&#1082;&#1072;&#1083;&#1072;&#1074;&#1088;&#1080;&#1072;&#1090; 1 &#1082;&#1091;&#1088;&#1089; — &#1091;&#1095;&#1072;&#1089;&#1090;&#1085;&#1080;&#1082;&#1080;</mso:SharedWithUsers>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>

@@ -1,0 +1,62 @@
+Введите n <br>
+<input id=Jusus value="3"></input> <br>
+Введите матрицу <br>
+<textarea id=txt cols=20 rows=10>
+ 3 -1 9
+ 6  7 0
+ 0  0 1
+</textarea>
+<button onclick="alert(
+ determinant( getMatrix(txt.value) )
+)"> click </button> <br>
+
+ 
+
+<script>
+let n =  Jusus.value;
+for (i=0;i<n**n;i++) console.log(
+ Number(i).toString(n).padStart(3,'0'));
+
+ 
+ function getMatrix (text) {
+   return text
+            .split('\n')
+            .filter(s=>s)
+            .map (s=>s
+                 .split(' ')
+                 .filter(v=>v)
+                 .map (Number)
+                 )
+ }
+ 
+function determinant (a, h, D, k) {
+for (i=0; i<n; i++) {
+ v = i;
+ for (z=0; z<n; z++ ) {
+  if (v > n-1) { v = 0 };
+  h *= a[z][v];
+  v += 1;
+ }
+ D += h;
+ }
+ for (r=n-1; r>=0; r--) {
+ t = r;
+ for (y=0; y<n; y++ ) {
+  if (t < 0) { t = n-1 };
+  k *= a[y][t];
+  t -= 1;
+ }
+ D -= k;
+ }
+return D;
+} 
+/* function determinant (a) {
+  D=a[0][0]*a[1][1]*a[2][2]
+   +a[0][1]*a[1][2]*a[2][0]
+   +a[0][2]*a[1][0]*a[2][1]
+   -a[0][2]*a[1][1]*a[2][0]
+   -a[0][0]*a[1][2]*a[2][1]
+   -a[0][1]*a[1][0]*a[2][2]
+  return D; 
+ } */
+</script>

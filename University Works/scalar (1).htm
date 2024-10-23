@@ -1,0 +1,89 @@
+<body onkeydown="
+ switch(event.key) {
+  case 'ArrowUp'   : X += DX, Y += DY; break;
+  case 'ArrowDown' : X -= DX, Y -= DY; break;
+  case 'ArrowLeft' : A -= 10; break;
+  case 'ArrowRight': A += 10; break;
+ }
+ redraw();
+">
+<canvas id=canvas width=600 height=600
+ style="border:1px dashed red;"</canvas>
+<script>
+ karta =
+`00000000000000000000
+ 00100000000000000000
+ 00011111111110000000
+ 00010000000010000000
+ 00011010000010000000
+ 00011110000000010000
+ 00100000000000010000
+ 00000000000000000000
+ 00000000000000000000
+ 00000000000000000000
+ 00000000000000000000
+ 00000000000000000000
+ 00000000000000000000
+ 00000000000000000000
+ 00000000000000000000
+ 00000000000000000000
+ 00000000000000000000
+ 00000000000000000000
+ 00000000000000000000
+ 00000000000000000000`
+ .split('\n ').map(v=>v.split('').map(v=>+v));
+ const ms = 30,
+       kh = karta.length,
+       kw = karta[0].length;
+ X=Y=300; A=-90, DX=0, DY=-ms;
+ a = {x:-1, y:0};
+ b = {x:1, y:1};
+ scalar = (a,b) => a.x*b.x+a.y*b.y;
+ length =  a    => Math.sqrt(scalar(a,a));
+ cosang = (a,b) => scalar(a,b)/length(a)/length(b);
+
+ ctx = canvas.getContext('2d');
+ 
+ function redraw () {
+ canvas.width += 0;
+ DX = Math.cos(A/180*Math.PI)*ms;
+ DY = Math.sin(A/180*Math.PI)*ms;
+ ctx.fillRect(X-10,Y-10,20,20);
+ line(X,Y,X+DX,Y+DY);
+ line(X,Y,X-DY,Y+DX);
+ line(X,Y,X+DY,Y-DX);
+ ctx.strokeStyle = "red";
+ ctx.lineWidth   = 5;
+ for (let i = 0; i < kh; i++)
+  for (let j = 0; j < kw; j++) if (karta[i][j]) {
+   let v = {x:ms*j-X, y:ms*i-Y};
+   ctx.fillRect(ms*j,ms*i,ms,ms);
+   if (!karta[i-1][j]) {
+    let n = {x:0, y:-1};
+    if (scalar(v,n) < 0)
+    line(ms*j,ms*i, ms*j+ms,ms*i);
+   }
+   if (!karta[i][j+1]) {
+    let n = {x:1, y:0};
+    if (scalar(v,n)<0)
+    line(ms*j+ms,ms*i,    ms*j+ms,ms*i+ms);
+   }
+   if (!karta[i+1][j]) {
+    let n = {x:0, y:1};
+    if (scalar(v,n)<0)
+    line(ms*j+ms,ms*i+ms, ms*j,ms*i+ms);
+   }
+   if (!karta[i][j-1]) {
+    let n = {x:-1,y:0};
+    if (scalar(v,n)<0)
+   line(ms*j,ms*i+ms,    ms*j,ms*i);
+   }
+  }
+ ctx.stroke();
+ }
+ function line (x1,y1,x2,y2) {
+   ctx.moveTo(x1,y1);
+   ctx.lineTo(x2,y2);
+ }
+ redraw();
+</script>

@@ -1,0 +1,31 @@
+<button onclick="start()">Нарисовать</button> <br>
+<button onclick="begin()">На весь экран</button> <br>
+<canvas id=canvas style="border: solid red 1px" width=500 height=500></canvas>
+
+<script>
+ctx = canvas.getContext('2d');
+let S1 = 1
+function begin() {
+canvas.width += 0;
+ S1 += 5.5;
+ start();
+}
+function start(){
+canvas.width += 0;
+function line(x1,y1,x2,y2) {
+ ctx.moveTo(x1,y1);
+ ctx.lineTo(x2,y2);
+ ctx.stroke();
+}
+Xs = Array(11).fill(0).map((value, index) => 0.2*index);
+Ys = Xs.map(x => 11.2*(-0.0714286*x**2-0.285714*x+Math.exp(0.5*x)-0.910714));
+m = Math.min(...Ys);
+M = Math.max(...Ys);
+ctx.moveTo(Xs[0]*40*S1,400-Ys[0]*40);
+for (i=1; i<Ys.length; i++){
+ ctx.lineTo(Xs[i]*40*S1,400-Ys[i]*40);
+};
+ctx.stroke();
+ S1 = 1;
+}
+</script>

@@ -1,0 +1,77 @@
+<table id="tbl" border=1>
+<tr>
+ <td></td>
+ <td> Ж </td>
+ <td> А </td>
+ <td> Д </td>
+ <td> Ш </td>
+ <td> К </td>
+</tr>
+<tr>
+ <td> Ж </td>
+ <td> 0 </td>
+ <td> 30 </td>
+ <td> 20 </td>
+ <td> -1 </td>
+ <td> 15 </td>
+</tr>
+<tr>
+ <td> А </td>
+ <td> 30 </td>
+ <td> 0 </td>
+ <td> 20 </td>
+ <td> 10 </td>
+ <td> -1 </td>
+</tr>
+<tr>
+ <td> Д </td>
+ <td> 20 </td>
+ <td> 20 </td>
+ <td> 0 </td>
+ <td> -1 </td>
+ <td> 10 </td>
+</tr>
+<tr>
+ <td> Ш </td>
+ <td> -1 </td>
+ <td> 10 </td>
+ <td> 0 </td>
+ <td> 0 </td>
+ <td> 30 </td>
+</tr>
+<tr>
+ <td> К </td>
+ <td> 15 </td>
+ <td> -1 </td>
+ <td> 10 </td>
+ <td> 30 </td>
+ <td> 0 </td>
+</tr>
+</table>
+ 
+<ul>
+  <li> Ж &mdash; ЖД вокзал </li>
+  <li> А &mdash; автостанция </li>
+  <li> Д &mdash; магазин Дисконт </li>
+  <li> Ш &mdash; школа </li>
+  <li> К &mdash; магазин Корстон </li>
+</ul>
+ 
+<script>
+ let names = ["Ж","А","Д","Ш","К"];
+ let price = tbl.innerHTML.split("<tr>").slice(2).map(e => e.split("<td>").slice(2).map(e => +e.trim().split(" ")[0]));
+ price = price.map(row => row.map(n => n<0?Infinity:n));
+ let Path = "NA", Sum = Infinity;
+ for (let i = 2; i < 5; i++)
+  for (let j = 2; j < 5; j++) if (j != i)
+   for (let k = 2; k < 5; k++) if (k != j) if (k != i) {
+    let sum = 0;
+    sum += price[0][i];
+    sum += price[i][j];
+    sum += price[j][k];
+    sum += price[k][1];
+    let path = names[0]+"⇒"+names[i]+'⇒'+names[j]+'⇒'+names[k]+'⇒'+names[1];
+    if (sum < Sum) { Sum = sum; Path = path }
+   }
+ alert('Наилучшая дорога '+Path+" стоит " +Sum+ " рублей.");   
+</script>

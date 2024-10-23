@@ -1,0 +1,27 @@
+<button onclick='alert("Точность = "+Step())'>Запуск</button> <br>
+<textarea id=txt cols=50 rows=4></textarea>
+<script>
+x1=x2=x3=x4=0;
+Урав1 = '0.34*x2-0.23*x3+0.06*x4+1.42';
+Урав2 = '0.11*x1-0.23*x2-0.18*x3+0.36*x4-0.66';
+Урав3 = '0.23*x1-0.12*x2+0.15*x3-0.35*x4+1.08';
+Урав4 = '0.12*x1+0.11*x2-0.47*x3+0.17*x4+1.72';
+
+function Step() {
+ let D = 1;
+ while (D>0.0000011) {
+ X1 = eval(Урав1);
+ X2 = eval(Урав2);
+ X3 = eval(Урав3);
+ X4 = eval(Урав4);
+ let [d1, d2, d3, d4] = [X1-x1, X2-x2, X3-x3, X4-x4].map(v=>v*v);
+ D = Math.sqrt(d1+d2+d3+d4);
+ [x1, x2, x3, x4] = [X1, X2, X3, X4];
+ }
+txt.value = 'x1='+x1+'\n'
++'x2='+x2+'\n' 
++'x3='+x3+'\n' 
++'x4='+x4;
+return D;
+}
+</script>

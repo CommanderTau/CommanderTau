@@ -1,0 +1,22 @@
+<script>
+function Check(загадал, догадка) {
+ let bull = 0;
+ for (let i=0; i<4; i++)
+  if(загадал[i] == догадка[i]) bull++
+ let cows = 0;
+ for (let i=0; i<4; i++)
+  for (let n=0; n<4; n++)
+   if(загадал[i] == догадка[n]) cows++
+ cows -= bull;
+ return [bull, cows] 
+}
+let загадал = '';
+for (let i=0; i<4; i++) загадал += ~~(Math.random()*10);
+let repeat = true
+do {
+ let догадка = prompt('Напиши догадку');
+ let [bull, cows] = Check(загадал, догадка);
+ if (bull == 4) repeat = false, alert('Победа (бык)!')
+  else alert('Количество быков='+bull+', а коров='+cows)
+} while (repeat);
+</script>
