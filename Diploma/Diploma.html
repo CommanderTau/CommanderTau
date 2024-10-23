@@ -1,0 +1,192 @@
+<input type='file' id=fileload  onchange='previewFile(this.files[0]); filename=fileload.files[0].name.split(".")[0]'></input> <br>
+<button onclick=make_base()>Превратить в ЧБ</button>
+<button onclick=segment()>Сегментация</button> 
+<button onclick=STAF()>Сохранить файлом</button> <br>
+<input id=rang type=range min=0 max=255 value=127> <br>
+<img id=Cheese> <br>
+<canvas style='border: solid red 1px' id=canv>
+
+<script>
+const reader = new FileReader(); 
+reader.onload = function(){
+Cheese.src = reader.result;
+}
+function previewFile(file) { 
+ reader.readAsDataURL(file);
+} 
+var canvas = document.getElementById('canv'),
+context = canvas.getContext('2d');
+
+function make_base() { 
+ MASSI = [];
+canvas.width = Cheese.width+2;
+ canvas.height = Cheese.height+2;
+ context.fillStyle = "white";
+ context.fillRect(0, 0, canvas.width, canvas.height);
+ context.drawImage(Cheese, 1, 1);
+ var pixels = context.getImageData(0, 0, canvas.width, canvas.height);
+ for (var i = 0; i < pixels.data.length; i += 4) {
+  pixels.data[i+0] = pixels.data[i+0];
+  pixels.data[i+1] = pixels.data[i+0];
+  pixels.data[i+2] = pixels.data[i+0];
+  if (pixels.data[i+0] <= rang.value)  { pixels.data[i+0] = 0;}
+   else {pixels.data[i+0] = 255;};
+  if (pixels.data[i+1] <= rang.value)  { pixels.data[i+1] = 0;}
+   else {pixels.data[i+1] = 255;};
+  if (pixels.data[i+2] <= rang.value)  { pixels.data[i+2] = 0; MASSI.push(1);}
+   else {pixels.data[i+2] = 255; MASSI.push(0);};
+ };
+ context.putImageData(pixels, 0, 0);
+ let subarray = [];
+ for (let i = 0; i <Math.ceil(MASSI.length/canvas.width); i++){
+    subarray[i] = MASSI.slice((i*canvas.width), (i*canvas.width) + canvas.width);
+}
+ let subarrayNEPole = [];
+ for (h=0; h<canvas.height-1; h++) {
+ for (w=0; w<canvas.width-1; w++) {
+subarrayNEPole.push(subarray[h+0][w+0]*8+subarray[h+0][w+1]*4+subarray[h+1][w+0]*2+subarray[h+1][w+1]*1);
+ };
+ };
+  subarrayPole = [];
+for (let i = 0; i < canvas.height-1; i++){
+   subarrayPole[i] = subarrayNEPole.slice((i*(canvas.width-1)), (i*(canvas.width-1)) + (canvas.width-1));
+}
+}
+
+function segment() {
+Vector = 0;
+ Naprav = 1;
+ Plosh = 0;
+ invar = 0;
+ h1 = 0;
+ w1 = 0;
+ Total = []; 
+ i2 = 0; 
+ for (h=0; h<Cheese.height; h++) {
+ for (w=0; w<Cheese.width; w++) {
+  if (subarrayPole[h][w] != 0) {
+   if (subarrayPole[h][w] != 15) {
+   h1 = h; w1 = w;
+  for (i1 = 0; i1 == i2; i1++) {
+    switch(subarrayPole[h1][w1]) {
+	 case 0: break;
+	 case 1: if (Naprav == 1) {
+              Naprav = 0;
+              subarrayPole[h1][w1] = 0; w1++; i2 += 1; Plosh -= h1; break;
+			  } 
+	         else {      
+			       switch (Vector) {
+                    case 0: Vector = (Vector + 5) % 4; subarrayPole[h1][w1] = 0; h1++; i2 += 1; break;
+			        case 1: Vector = (Vector + 5) % 4;
+subarrayPole[h1][w1] = 0; w1--; i2 += 1; Plosh += h1; break;
+			        case 2: Vector = (Vector + 5) % 4;
+subarrayPole[h1][w1] = 0; h1--; i2 += 1; break;
+			        case 3: Vector = (Vector + 5) % 4;
+subarrayPole[h1][w1] = 0; w1++; i2 += 1; Plosh -= h1; break;
+                   }; break;};
+	 case 2: switch (Vector) {
+              case 0: Vector = (Vector + 5) % 4; subarrayPole[h1][w1] = 0; h1++; i2 += 1; break;
+			  case 1: Vector = (Vector + 5) % 4; subarrayPole[h1][w1] = 0; w1--; i2 += 1; Plosh += h1; break;
+			  case 2: Vector = (Vector + 5) % 4; subarrayPole[h1][w1] = 0; h1--; i2 += 1; break;
+			  case 3: Vector = (Vector + 5) % 4; subarrayPole[h1][w1] = 0; w1++; i2 += 1; Plosh -= h1; break;
+             }; break;
+	 case 3: switch (Vector) {
+              case 0:                            subarrayPole[h1][w1] = 0; w1++; i2 += 1; Plosh -= h1; break;
+			  case 1:                            subarrayPole[h1][w1] = 0; h1++; i2 += 1; break;
+			  case 2:                            subarrayPole[h1][w1] = 0; w1--; i2 += 1; Plosh += h1; break;
+			  case 3:                            subarrayPole[h1][w1] = 0; h1--; i2 += 1; break;
+             }; break;
+	 case 4: switch (Vector) {
+              case 0: Vector = (Vector + 5) % 4; subarrayPole[h1][w1] = 0; h1++; i2 += 1; break;
+			  case 1: Vector = (Vector + 5) % 4; subarrayPole[h1][w1] = 0; w1--; i2 += 1; Plosh += h1; break;
+			  case 2: Vector = (Vector + 5) % 4; subarrayPole[h1][w1] = 0; h1--; i2 += 1; break;
+			  case 3: Vector = (Vector + 5) % 4; subarrayPole[h1][w1] = 0; w1++; i2 += 1; Plosh -= h1; break;
+             }; break;
+	 case 5: switch (Vector) {
+              case 0:                            subarrayPole[h1][w1] = 0; w1++; i2 += 1; Plosh -= h1; break;
+			  case 1:                            subarrayPole[h1][w1] = 0; h1++; i2 += 1; break;
+			  case 2:                            subarrayPole[h1][w1] = 0; w1--; i2 += 1; Plosh += h1; break;
+			  case 3:                            subarrayPole[h1][w1] = 0; h1--; i2 += 1; break;
+             }; break;
+	 case 6: switch (Vector) {
+              case 0: Vector = (Vector + 3) % 4; subarrayPole[h1][w1] = 7; h1--; i2 += 1; break;
+			  case 1: Vector = (Vector + 3) % 4; subarrayPole[h1][w1] = 7; w1++; i2 += 1; Plosh -= h1; break;
+			  case 2: Vector = (Vector + 3) % 4; subarrayPole[h1][w1] = 7; h1++; i2 += 1; break;
+			  case 3: Vector = (Vector + 3) % 4; subarrayPole[h1][w1] = 7; w1--; i2 += 1; Plosh += h1; break;
+             }; break
+	 case 7: switch (Vector) {
+              case 0: Vector = (Vector + 3) % 4; subarrayPole[h1][w1] = 0; h1--; i2 += 1; break;
+			  case 1: Vector = (Vector + 3) % 4; subarrayPole[h1][w1] = 0; w1++; i2 += 1; Plosh -= h1; break;
+			  case 2: Vector = (Vector + 3) % 4; subarrayPole[h1][w1] = 0; h1++; i2 += 1; break;
+			  case 3: Vector = (Vector + 3) % 4; subarrayPole[h1][w1] = 0; w1--; i2 += 1; Plosh += h1; break;
+             }; break
+	 case 8: switch (Vector) {
+              case 0: Vector = (Vector + 5) % 4; subarrayPole[h1][w1] = 0; h1++; i2 += 1; break;
+			  case 1: Vector = (Vector + 5) % 4; subarrayPole[h1][w1] = 0; w1--; i2 += 1; Plosh += h1; break;
+			  case 2: Vector = (Vector + 5) % 4; subarrayPole[h1][w1] = 0; h1--; i2 += 1; break;
+			  case 3: Vector = (Vector + 5) % 4; subarrayPole[h1][w1] = 0; w1++; i2 += 1; Plosh -= h1; break;
+             }; break;
+	 case 9: switch (Vector) {
+              case 0: Vector = (Vector + 3) % 4; subarrayPole[h1][w1] = 11; h1--; i2 += 1; break;
+			  case 1: Vector = (Vector + 3) % 4; subarrayPole[h1][w1] = 11; w1++; i2 += 1; Plosh -= h1; break;
+			  case 2: Vector = (Vector + 3) % 4; subarrayPole[h1][w1] = 11; h1++; i2 += 1; break;
+			  case 3: Vector = (Vector + 3) % 4; subarrayPole[h1][w1] = 11; w1--; i2 += 1; Plosh += h1; break;
+             }; break
+	 case 10: switch (Vector) {
+               case 0:                            subarrayPole[h1][w1] = 0; w1++; i2 += 1; Plosh -= h1; break;
+			   case 1:                            subarrayPole[h1][w1] = 0; h1++; i2 += 1; break;
+			   case 2:                            subarrayPole[h1][w1] = 0; w1--; i2 += 1; Plosh += h1; break;
+			   case 3:                            subarrayPole[h1][w1] = 0; h1--; i2 += 1; break;
+              }; break;
+	 case 11: switch (Vector) {
+               case 0: Vector = (Vector + 3) % 4; subarrayPole[h1][w1] = 0; h1--; i2 += 1; break;
+			   case 1: Vector = (Vector + 3) % 4; subarrayPole[h1][w1] = 0; w1++; i2 += 1; Plosh -= h1; break;
+			   case 2: Vector = (Vector + 3) % 4; subarrayPole[h1][w1] = 0; h1++; i2 += 1; break;
+			   case 3: Vector = (Vector + 3) % 4; subarrayPole[h1][w1] = 0; w1--; i2 += 1; Plosh += h1; break;
+              }; break
+	 case 12: switch (Vector) {
+               case 0:                            subarrayPole[h1][w1] = 0; w1++; i2 += 1; Plosh -= h1; break;
+			   case 1:                            subarrayPole[h1][w1] = 0; h1++; i2 += 1; break;
+			   case 2:                            subarrayPole[h1][w1] = 0; w1--; i2 += 1; Plosh += h1; break;
+			   case 3:                            subarrayPole[h1][w1] = 0; h1--; i2 += 1; break;
+              }; break;
+	 case 13: switch (Vector) {
+               case 0: Vector = (Vector + 3) % 4; subarrayPole[h1][w1] = 0; h1--; i2 += 1; break;
+			   case 1: Vector = (Vector + 3) % 4; subarrayPole[h1][w1] = 0; w1++; i2 += 1; Plosh -= h1; break;
+			   case 2: Vector = (Vector + 3) % 4; subarrayPole[h1][w1] = 0; h1++; i2 += 1; break;
+			   case 3: Vector = (Vector + 3) % 4; subarrayPole[h1][w1] = 0; w1--; i2 += 1; Plosh += h1; break;
+              }; break
+	 case 14: switch (Vector) {
+               case 0: Vector = (Vector + 3) % 4; subarrayPole[h1][w1] = 0; h1--; i2 += 1; break;
+			   case 1: Vector = (Vector + 3) % 4; subarrayPole[h1][w1] = 0; w1++; i2 += 1; Plosh -= h1; break;
+			   case 2: Vector = (Vector + 3) % 4; subarrayPole[h1][w1] = 0; h1++; i2 += 1; break;
+			   case 3: Vector = (Vector + 3) % 4; subarrayPole[h1][w1] = 0; w1--; i2 += 1; Plosh += h1; break;
+              }; break
+	 case 15: break;
+	};};
+	Vector = 0; 
+	if (Plosh > 10) {
+	 if (i2 > 10) {
+	  if (Plosh > i2) {
+	invar = i2/Math.sqrt(Plosh);
+	Total.push('Периметр = '+ i2 + ' Площадь = ' + Plosh + ' Инвариант = ' + invar + '\n'); 
+	}}} Naprav = 1; i2 = 0; Plosh = 0; invar = 0;
+	};};};};};
+
+function STAF() {
+ let textFileAsBlob = new Blob([ Total ], { type: 'text/plain' });
+ let fileNameToSaveAs = filename+".txt"; 
+ let downloadLink = document.createElement("a");
+ downloadLink.download = fileNameToSaveAs;
+ downloadLink.innerHTML = "Download File";
+ if (window.webkitURL != null) {
+    downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
+  } else {
+    downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+    downloadLink.onclick = destroyClickedElement;
+    downloadLink.style.display = "none";
+    document.body.appendChild(downloadLink);
+  }
+  downloadLink.click();
+}
+</script>
