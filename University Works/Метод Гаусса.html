@@ -1,0 +1,35 @@
+Откройте консоль
+<textarea id="answear"></textarea>
+<script>
+
+function func(x) {
+    return 2 * (x * x);
+}
+
+const gaussNodes = [-0.5773502691896257, 0.5773502691896257];
+const gaussWeights = [1, 1];
+
+function gaussIntegration(f, a, b) {
+    let integral = 0;
+
+    const A = (b - a) / 2;
+    const B = (a + b) / 2;
+
+    for (let i = 0; i < gaussNodes.length; ++i) {
+        const x = A * gaussNodes[i] + B;
+        integral += gaussWeights[i] * f(x);
+    }
+
+    integral *= A;
+
+    return integral;
+}
+
+const a = 1;
+const b = 2;
+
+const result = gaussIntegration(func, a, b);
+let answear = result;
+console.log(`Результат интегрирования: ${result}`);
+
+</script>

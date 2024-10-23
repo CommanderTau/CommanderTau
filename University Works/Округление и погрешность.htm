@@ -1,0 +1,53 @@
+Откройте консоль
+
+<script>
+
+first();
+console.log();
+second();
+console.log();
+third();
+
+function first() {
+    const val1Approx = 1.62;
+    const val1Exact = 21/13;
+    const error1 = Math.abs(val1Approx - val1Exact);
+
+    const val2Approx = 7.94;
+    const val2Exact = Math.sqrt(63);
+    const error2 = Math.abs(val2Approx - val2Exact);
+
+    console.log(`Ошибка в 21/13 = 1.62: ${error1.toFixed(4)}`);
+    console.log(`Ошибка в sqrt(63) = 7.94: ${error2.toFixed(4)}`);
+    console.log(error1 < error2 ? "14/17 = 0.824 более точный" : "sqrt(53) = 7.28 более точный");
+}
+
+function second() {
+    const a = 45.7832;
+    const deltaPercent = 0.18;
+    const initialAbsoluteError = a * deltaPercent / 100;
+
+    const roundedValue = Math.round(a * 10) / 10;
+
+    const roundingError = Math.abs(roundedValue - a);
+    const totalError = initialAbsoluteError + roundingError;
+
+    console.log(`Оригинальное число: ${a}`);
+    console.log(`Начальная абсолютная погрешность: ${initialAbsoluteError.toFixed(4)}`);
+    console.log(`Округлённое число: ${roundedValue}`);
+    console.log(`Округлённая ошибка: ${roundingError.toFixed(4)}`);
+    console.log(`Суммарная абсолютная погрешность после округления: ${totalError.toFixed(4)}`);
+}
+
+function third() {
+    const approxNumber = 3.36765;
+    const minChange = 0.001;
+    const absoluteError = minChange;
+    const relativeError = absoluteError / approxNumber;
+
+    console.log(`Абсолютная ошибка: ${absoluteError}`);
+    console.log(`Относительная ошибка: ${(relativeError * 100).toFixed(2)}%`);
+}
+
+
+</script>

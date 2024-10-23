@@ -1,0 +1,32 @@
+Откройте консоль
+
+<script>
+
+let x1 = 0;
+let x2 = 0; 
+let x3 = 0; 
+let x4 = 0;
+const tolerance = 0.001;
+
+while (true) {
+ const x1n = (0.32*x1 - 0.23*x2 + 0.41*x3 - 0.06*x4 + 0.67)/(1 - 0.06);
+ const x2n = (0.18*x1 + 0.12*x2 - 0.33*x4 - 0.88)/(1 - 0.23);
+ const x3n = (0.12*x1 + 0.32*x2 - 0.05*x3 + 0.67*x4 - 0.18) / 1;
+ const x4n = (0.05*x1 + 0.11*x2 - 0.09*x3 - 0.12*x4 + 1.44) / 1;
+
+ if (Math.abs(x1 - x1n) <= tolerance &&
+  Math.abs(x2 - x2n) <= tolerance &&
+  Math.abs(x3 - x3n) <= tolerance &&
+  Math.abs(x4 - x4n) <= tolerance) {
+   break;
+  }
+
+ x1 = x1n;
+ x2 = x2n;
+ x3 = x3n;
+ x4 = x4n;
+}
+
+console.log(`x1 = ${x1}, x2 = ${x2}, x3 = ${x3}, x4 = ${x4}`);
+
+</script>

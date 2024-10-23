@@ -1,0 +1,72 @@
+Откройте консоль
+
+<script>
+
+const equations = [
+ ["sin(x) + 2(x^2) - 5", x => Math.sin(x) + 2*(x*x) - 5],
+ ["cos(x) - x^3 + 2", x => Math.cos(x) * (x*x*x) + 2],
+ ["2 * ln(x) + x^2 - 3", x => 2 * Math.log(x) + (x*x) - 3],
+ ["2 * ln(x) + x - 7", x => 2 * Math.log(x) + x - 7],
+ ["ln(x) + x^2 - 3", x => Math.log(x) + (x*x) - 3]
+];
+
+function findInitialGuesses(f, xRange = [0.01, 10], step = 0.1) {
+ const initialGuesses = [];
+ let [xMin, xMax] = xRange;
+ let x = xMin;
+ while (x <= xMax) {
+     if (f(x) * f(x + step) < 0) {
+         initialGuesses.push([x, x + step]);
+     }
+     x += step;
+ }
+ return initialGuesses;
+}
+
+function chordMethod(f, x0, x1, tol = 1e-6, maxIter = 100) {
+ console.log("Метод хорд");
+ console.log(`Начальное приближение: x0 = ${x0}, x1 = ${x1}`);
+ for (let i = 0; i < maxIter; i++) {
+  const xNext = x1 - f(x1) * (x1 - x0) / (f(x1) - f(x0));
+  console.log(`Итерация ${i + 1}: x${i + 2} = ${xNext.toFixed(6)}`);
+  if (Math.abs(xNext - x1) < tol) {
+   console.log(`Примерное решение: x ≈ ${xNext.toFixed(6)}`);
+   return xNext;
+   }
+  [x0, x1] = [x1, xNext];
+    }
+ console.log("Решения нет");
+ return null;
+}
+
+function secantMethod(f, x0, x1, tol = 1e-6, maxIter = 100) {
+ console.log("Метод секущих");
+ console.log(`Начальное приближение: x0 = ${x0}, x1 = ${x1}`);
+ for (let i = 0; i < maxIter; i++) {
+  const xNext = x1 - f(x1) * (x1 - x0) / (f(x1) - f(x0));
+  console.log(`Итерация ${i + 1}: x${i + 2} = ${xNext.toFixed(6)}`);
+  if (Math.abs(xNext - x1) < tol) {
+   console.log(`Примерное решение: x ≈ ${xNext.toFixed(6)}`);
+   return xNext;
+  }
+  [x0, x1] = [x1, xNext];
+ }
+console.log("Решения нет");
+return null;
+}
+
+equations.forEach(([equationStr, f], i) => {
+ console.log(`\nУравнение ${i + 1}: ${equationStr}`);
+ const guesses = findInitialGuesses(f);
+ if (guesses.length) {
+  guesses.forEach(([x0, x1], j) => {
+  console.log(`\nНачальные приближения для корня ${j + 1}: x0 = ${x0}, x1 = ${x1}`);
+  chordMethod(f, x0, x1);
+  ecantMethod(f, x0, x1);
+ });
+} else {
+  console.log("Не удалось найти начальные приближения");
+}
+});
+
+</script>

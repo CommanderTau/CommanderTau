@@ -1,0 +1,43 @@
+Откройте консоль
+
+<script>
+
+const y_guess = 0.0;
+const x_guess = 0.0;
+const maxIter = 1000;
+const tol = 1e-6;
+
+function f1(y, x) {
+    return Math.cos(x + 0.5) + y - 0.8;
+}
+
+function f2(y, x) {
+    return Math.sin(y) - 2 * x - 1.6;
+}
+
+function update_y(y, x) {
+    return (Math.cos(x + 0.5) - 0.8) * (-1);
+}
+
+function update_x(y, x) {
+    return (Math.sin(y)/2 - 1.6) * (-1);
+}
+
+function gaussSeidelNonlinear(y, x, maxIter, tol) {
+    for (let iter = 0; iter < maxIter; ++iter) {
+        const y_new = update_y(y, x);
+        const x_new = update_x(y_new, x);
+        if (Math.abs(y_new - y) < tol && Math.abs(x_new - x) < tol) {
+            console.log('Ответ:');
+            console.log(`y = ${y_new}, x = ${x_new}`);
+            return;
+        }
+        y = y_new;
+        x = x_new;
+    }
+    console.log(`Ответ не найден после ${maxIter} итераций.`);
+}
+
+gaussSeidelNonlinear(y_guess, x_guess, maxIter, tol);
+
+</script>

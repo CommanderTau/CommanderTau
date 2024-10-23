@@ -1,0 +1,46 @@
+Откройте консоль <br>
+График расположен тут:<br>
+https://www.desmos.com/calculator/fpaowfjuww?lang=ru
+
+<script>
+
+const x = [6, 7, 8];
+const y = new Array(x.length);
+
+for (let i = 0; i < x.length; i++) {
+    y[i] = Function(x[i]);
+    console.log(`f(${x[i]}) = ${y[i]}`);
+}
+
+const a = 6.5;
+const f_a = Function(a);
+const L_a = LagrangePolynomial(a, x, y);
+const error = Math.abs(f_a - L_a);
+
+console.log(`f(${a}) = ${f_a}`);
+console.log(`L(${a}) = ${L_a}`);
+console.log(`Error = ${error}`);
+
+function Function(z) {
+    return Math.pow(Math.log(z), 11 / 2);
+}
+
+function LagrangePolynomial(z, x, y) {
+    let result = 0.0;
+    const n = x.length;
+
+    for (let i = 0; i < n; i++) {
+        let term = y[i];
+        for (let j = 0; j < n; j++) {
+            if (j !== i) {
+                term *= (z - x[j]) / (x[i] - x[j]);
+            }
+        }
+        result += term;
+    }
+
+    return result;
+}
+
+
+</script>
