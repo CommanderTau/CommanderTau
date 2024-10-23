@@ -1,0 +1,1 @@
+This thesis work presents an accelerated fractal compression algorithm based on contour-based fusion of image fragments. It does not contain full-fledged segmentation, but based on it the speed of image segmentation is improved from quadratic to linear. The program itself can be improved by better binarization, simply because it implements the most primitive version of it
