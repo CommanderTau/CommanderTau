@@ -1,0 +1,45 @@
+<body onload="draw()">
+<canvas id="canvas" width=600px height=300px></canvas>
+
+<img id="image" src="saint.jpg" hidden>;
+
+<script>
+function draw () {
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+// ctx.transform(0.4,-0.2,0.15,0.97,-130,-80);
+//ctx.transform ( 2.28, 0.46, -0.37, 0.9, 285, 140 );
+//ctx.transform ( -2/7, -4/7, -6/7, 2/7, 160/7, 40/7 );
+ctx.transform ( 120/293, -60/293, 285/2051, 2055/2051, -39900/293, -24000/293 );
+ctx.drawImage (image, 0, 0);
+
+// Ax = 190;  Ay = 420;
+// Bx = 1560; By = 700;
+// Cx = 970;  Cy = 280;
+
+// A'x = 0;   A'y = 300;
+// B'x = 600; B'y = 300;
+// C'x = 300; C'y = 0;
+
+
+// Ax = 20; Ay = 20;
+// Bx = 15; By = 10;
+// Cx =  5; Cy = 25;
+
+// A'x =  0; A'y =  0;
+// B'x = 10; B'y =  0;
+// C'x =  0; C'y = 10;
+
+
+ ctx.strokeStyle="lime";
+ctx.lineWidth = 3;
+ctx.resetTransform();
+ctx.beginPath();
+ctx.moveTo(0, 300);
+ctx.lineTo(600, 300);
+ctx.lineTo(300, 0);
+ctx.closePath();
+ctx.stroke();
+}
+</script>
+</body>
