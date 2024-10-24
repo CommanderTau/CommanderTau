@@ -1,0 +1,207 @@
+﻿<input type=file accept=.seq multiple autofocus
+ onchange=FR.readAsText(this.files[0])>                                        <br>
+Ширина скользящего окна:                                                       <br>
+<input id=Slip value=1000></input>
+<button onclick=Mask()> Тест </button>
+<button onclick=Window()> Сумма скол. окна </button>           
+<button onclick=canv()> Рисовать </button>                                   <br>
+<textarea id=tosmall cols=39 rows=25></textarea> 
+<textarea id=skolz cols=10 rows=25></textarea>                                 <br>
+<canvas width=1056 height=379 id=canvas></canvas>  <br>
+<!-- <input id=patt>                             <br>
+<button onclick=Show()> Отобразить </button><br>
+Общее количество пар:                       <br>
+<textarea id=all cols=1 rows=1></textarea> <br>
+Все пары:                                   <br>
+<textarea wrap=off id=pars cols=2 rows=2></textarea>
+<button onclick=STAF()>Сохранить файлом</button><br> -->
+
+<script>
+// TODO: Сделать прокрутку графика от начала до конца
+// TODO: https://stackoverflow.com/questions/64578135/how-does-one-achieve-ternary-assignment-in-javascript
+let file = 0;
+let val  = 0;
+FR = new FileReader();
+FR.onload =()=> file = FR.result;       
+function Mask(txt, patt, PATT, Progon, Postprog, finish, TimeBef, TimePost, TimeNow) {
+ Progon   = ['A','C','T','G'];
+ Postprog = ['a','c','t','g'];
+ TimeBef = Date.now();
+ txt = file.replaceAll('\r','').split('\n').slice(1).join('');
+ TimePost = Date.now();
+ TimeNow = TimePost - TimeBef;
+ console.log(TimeNow);
+ TimeBef = Date.now();
+ for (i=0; i<4; i++) {
+  for (n=0; n<4; n++) {
+   for (m=0; m<4; m++) {
+    if (m == n) continue;
+    PATT   = Progon[i]+Progon[n]+Progon[m];
+    finish = Postprog[i]+Postprog[n]+Postprog[m]+Postprog[i]+Postprog[n]+Postprog[m]+Postprog[i]+Postprog[n]+Postprog[m];
+    patt   = PATT.toLowerCase();
+    const regex  = new RegExp(PATT+PATT, 'g');
+    const regex2 = new RegExp(patt+PATT, 'g');
+    txt = txt.replaceAll(regex, finish).replaceAll(regex2, finish);
+   }
+  }  
+ }
+ TimePost = Date.now();
+ TimeNow = TimePost - TimeBef;
+ console.log(TimeNow);
+ TimeBef = Date.now();
+ for (i=0; i<4; i++) {
+  for (n=0; n<4; n++) {
+   if (n == i) continue;
+   PATT   = Progon[i]+Progon[n];
+   finish = Postprog[i]+Postprog[n]+Postprog[i]+Postprog[n];
+   patt   = PATT.toLowerCase();
+   const regex  = new RegExp(PATT+PATT, 'g');
+   const regex2 = new RegExp(patt+PATT, 'g');
+   txt = txt.replaceAll(regex, finish).replaceAll(regex2, finish);
+  }
+ }
+ TimePost = Date.now();
+ TimeNow = TimePost - TimeBef;
+ console.log(TimeNow);
+ TimeBef = Date.now();
+ for (i=0; i<4; i++) {
+  PATT   = Progon[i];
+  finish = Postprog[i]+Postprog[i];
+  patt   = PATT.toLowerCase();
+  const regex  = new RegExp(PATT+PATT, 'g');
+  const regex2 = new RegExp(patt+PATT, 'g');
+  txt = txt.replaceAll(regex, finish).replaceAll(regex2, finish);
+ }
+ TimePost = Date.now();
+ TimeNow = TimePost - TimeBef;
+ console.log(TimeNow);
+ 
+ txt = txt.replaceAll('a','0').replaceAll('c','0').replaceAll('t','0').replaceAll('g','0').replaceAll('A','1').replaceAll('C','1').replaceAll('T','1').replaceAll('G','1');
+ 
+ TimeBef = Date.now();
+ tosmall.value=txt;
+ TimePost = Date.now();
+ TimeNow = TimePost - TimeBef;
+ console.log(TimeNow);
+ return txt;
+}
+function Window(lng, lng2, k, slp, lngN, sum, sum2) {
+ let skolzko = '';
+ let moment = 0;
+ lng = tosmall.value;
+  lng2 = lng.length;
+  slp = +Slip.value;
+  k = Math.floor(lng2 / slp);
+ lng = lng.split('');
+ for (i=0; i<k; i++) {
+  sum = 0;
+  console.log(i*slp+slp);
+  lngN = lng.slice(i*slp, i*slp+slp).map(v=>+v).forEach(x => {sum += x;});
+  skolzko += sum + '\n'
+ }
+ skolz.value=skolzko;
+}
+function canv(color) {
+ sklz       = skolz.value.split('\n').map(v=>+v);
+ sklz.pop();
+ M = sklz.reduce((r,v)=>r=v>r?v:r,-Infinity);
+ m = sklz.reduce((r,v)=>r=v<r?v:r,+Infinity)
+ //M = Math.max(...sklz);
+ //m = Math.min(...sklz);
+ H   = canvas.height;
+ color = color || 'black';
+ const cnvs = document.getElementById("canvas")
+ ctx = cnvs.getContext('2d');
+ cnvs.width+=0;
+ //ctx.translate(0, cnvs.height);
+ //ctx.rotate(-Math.PI/2);
+ ctx.strokeStyle = color;
+ K = H/(M-m);
+ for (i=0; i < sklz.length-1; i++) {
+  let V1 = (sklz[ i ]-m)*K;
+  console.log(V1);
+  let V2 = (sklz[i+1]-m)*K;
+  console.log(V2);
+  ctx.moveTo(i, H-V1 )
+  ctx.lineTo(i+1, H-V2)
+ }
+ ctx.stroke();
+}
+function Test() {
+ //let a = 'ATATATATATAATAGCGCATATATATA'.replaceAll(/(.{5})/g, '$1 ').replaceAll(/(.{12})/g, '$1\n');
+ //tosmall.value = a;
+ //let small = file.replaceAll('\r','').split('\n').slice(1).join('')
+  //           .replaceAll(/A{3}A{3}/g,';
+ /*function Test() {
+ let small = file.replaceAll('\r','').split('\n').slice(1).join('');
+ let find  = 0;
+ let Dokon = 1;
+ while (Dokon == 1) {
+  find = small.search(/A{3}A{3}/);
+  let regexp = /A{3}/g;
+  regexp.lastIndex = find;
+  while(/A{3}(?=A{3})/y) {
+   alert(111);
+  }
+ // x(?=y)
+ }
+ //stroki = str.split('\r');
+ //str = stroki.join('');
+ }
+ */
+ //stroki = str.split('\r');
+ //str = stroki.join('');
+ }
+
+function Show() {
+ let CIKL   = 0;
+ let stroki = file.split('\n');
+ stroki.shift();
+ str = stroki.join('');
+ let cord  = [];
+ let cord2 = [];
+ let x = patt.value;
+ for (i=0, post=0; (i<file.length) && (post != -1); i++, post=str.indexOf(patt.value, post+x.length)) {
+  cord.push(post);
+ }
+ for (i=0; i<cord.length; i++) {
+  if (cord[i+1] == (cord[i]+x.length)){
+   if (CIKL == 0) {
+    cord2 +=  cord[i] + '(';
+	CIKL  += 2;
+   }
+   else {
+    CIKL += 1;
+   }
+  }
+  else {
+   if (CIKL > 0) {
+    cord2 += CIKL + ')' + '\n';
+    CIKL   = 0;
+   }
+  }
+ } 
+ cord.shift();
+ let kolvo  = cord.length;
+ pars.value = cord2;
+ all.value  = kolvo;
+} 
+
+function STAF() {
+ let textToWrite = pars.value;
+ let textFileAsBlob = new Blob([ textToWrite ], { type: 'text/plain' });
+ let fileNameToSaveAs = "Пары.txt"; 
+ let downloadLink = document.createElement("a");
+ downloadLink.download = fileNameToSaveAs;
+ downloadLink.innerHTML = "Download File";
+ if (window.webkitURL != null) {
+    downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
+  } else {
+    downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+    downloadLink.onclick = destroyClickedElement;
+    downloadLink.style.display = "none";
+    document.body.appendChild(downloadLink);
+  }
+  downloadLink.click();
+}
+</script>
