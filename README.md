@@ -1,5 +1,14 @@
 ## Hi there 👋
 
+I also frontend programmer!
+
+Here are the sites I've worked on:
+https://tarusaelan.ru/
+http://ivanova.task.v056.ru/
+http://hasko.task.v056.ru/
+http://zmtk.task.v056.ru/
+
+
 <!--
 **CommanderTau/CommanderTau** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
 
