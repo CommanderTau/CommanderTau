@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebRTC Video Chat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .video-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .video-box {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        video {
+            width: 100%;
+            background: #000;
+            border-radius: 4px;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+        
+        button:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+        }
+        
+        button:hover:not(:disabled) {
+            background: #45a049;
+        }
+        
+        #hangupButton {
+            background: #f44336;
+        }
+        
+        #hangupButton:hover:not(:disabled) {
+            background: #d32f2f;
+        }
+        
+        .user-list {
+            margin-top: 20px;
+        }
+        
+        label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        select {
+            padding: 8px;
+            font-size: 16px;
+            min-width: 200px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        
+        .status {
+            margin-top: 20px;
+            padding: 10px;
+            background: #e9ecef;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>WebRTC Video Chat</h1>
+        
+        <div class="video-container">
+            <div class="video-box">
+                <h2>Ваше видео</h2>
+                <video id="localVideo" autoplay muted playsinline></video>
+            </div>
+            <div class="video-box">
+                <h2>Собеседник</h2>
+                <video id="remoteVideo" autoplay playsinline></video>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button id="startButton">Start</button>
+            <button id="callButton" disabled>Call</button>
+            <button id="hangupButton" disabled>Hang Up</button>
+        </div>
+        
+        <div class="user-list">
+            <label for="usersList">Выберите собеседника:</label>
+            <select id="usersList" disabled>
+                <option value="" disabled selected>-- Выберите пользователя --</option>
+            </select>
+        </div>
+        
+        <div class="status">
+            <p>Ваш ID: <span id="yourId">...</span></p>
+            <p>Статус: <span id="status">Ожидание действий...</span></p>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="client.js"></script>
+</body>
+</html>
